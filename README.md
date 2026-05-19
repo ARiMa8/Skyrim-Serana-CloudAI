@@ -4,7 +4,7 @@
 
 Say goodbye to dialogue menus. **Serana Cloud AI** is an experimental, next-generation follower overhaul that allows you to command Serana using your real voice via a Push-to-Talk system.
 
-Instead of typing or selecting options, simply hold the 'X' key, say _"Let's head to Whiterun"_ or _"Kill that bandit"_, and watch her execute the action in real-time.
+Instead of typing or selecting options, simply hold the 'X' key, say _"Let's go to Whiterun"_ or _"Kill that Draugr"_, and watch her execute the action in real-time.
 
 ---
 
@@ -22,7 +22,7 @@ We know "Cloud AI" sounds intimidating. Here is our absolute guarantee:
 
 ### 1. True Natural Language Understanding (NLU)
 
-You don't need to speak like a robot. Powered by a custom-trained RoBERTa model hosted on a private Cloud VPS, the AI understands context. You can say _"Wait here"_, _"Hold your position"_, or _"Don't move"_—and the engine will process it as the exact same command.
+You don't need to speak like a robot. Powered by a custom-trained RoBERTa model hosted on a private Cloud VPS, the AI understands context. You can say _"Wait here"_, _"Hold your position"_, or _"Don't move"_-and the engine will process it as the exact same command.
 
 ### 2. Smart Threat Lock & Tactical Combat
 
@@ -34,7 +34,7 @@ Command Serana to navigate anywhere. Look at a chair and say _"Sit there"_, or l
 
 ### 4. Dynamic Relationship System (DRS)
 
-Serana has a memory. Compliment her (_"You look great today"_) or insult her, and her internal Affinity Score (-100 to +100) will shift. This dictates her mood, unlocking 424 fully lip-synced dialogues—covering all 5 affinity tiers and major intent categories—produced via ElevenLabs and voice-converted to match Laura Bailey's original performance.
+Serana has a memory. Compliment her (_"You look great today"_) or insult her, and her internal Affinity Score (-100 to +100) will shift. This dictates her mood, unlocking 424 fully lip-synced dialogues-covering all 5 affinity tiers and major intent categories-produced via ElevenLabs and voice-converted to match Laura Bailey's original performance.
 
 ---
 
