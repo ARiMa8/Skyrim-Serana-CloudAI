@@ -4,7 +4,7 @@
 
 Say goodbye to dialogue menus. **Serana Cloud AI** is an experimental, next-generation follower overhaul that allows you to command Serana using your real voice via a Push-to-Talk system.
 
-Instead of typing or selecting options, simply hold the 'X' key, say _"Let's head to Whiterun"_ or _"Kill that bandit"_, and watch her execute the action in real-time.
+Instead of typing or selecting options, simply hold the 'X' key, say _"Let's go to Whiterun"_ or _"Kill that Draugr"_, and watch her execute the action in real-time.
 
 ---
 
