@@ -1,0 +1,8 @@
+__pycache__/
+*.pex
+*.zip
+*.7z
+*.wav
+*.lip
+*.esp
+venv/
