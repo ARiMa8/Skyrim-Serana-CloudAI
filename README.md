@@ -57,11 +57,11 @@ Running a multi-task NLP inference pipeline (Intent + Entity + Sentiment simulta
 **Quick Summary:**
 
 1. Install this mod via **Mod Organizer 2** (Requires SKSE & PapyrusUtil SE).
-2. Install **Python 3.10+** on your PC (Make sure to check "Add Python to PATH" during installation).
+2. Install **Python 3.10 or newer** on your PC (Make sure to check "Add Python to PATH" during installation).
 3. Open the `Voice_Client` folder, launch `cmd`, and run these two commands in order:
    `python -m pip install --upgrade pip`
    `python -m pip install -r requirements.txt`
-4. Run `stt_client.py` and keep the terminal open in the background.
+4. **CRITICAL:** Launch Command Prompt **AS ADMINISTRATOR**, navigate to the `Voice_Client` folder, and run `python stt_client.py`. Keep it open in the background.
 5. Launch Skyrim, hold **'X'** to speak, and enjoy!
 
 ---
@@ -69,6 +69,7 @@ Running a multi-task NLP inference pipeline (Intent + Entity + Sentiment simulta
 ## COMPATIBILITY & LIMITATIONS
 
 - **Serana Overhauls:** Incompatible with mods that drastically alter Serana's base AI package and mental model (e.g., Serana Dialogue Add-on / SDA). Visual replacers are 100% fine.
+- **Hardware & Latency (CPU Bottleneck):** By default, the local STT transcription relies on your CPU. Transcription may take 2-5 seconds on older processors. For true real-time instant processing, manual configuration of CUDA/cuDNN for NVIDIA GPUs is required.
 - **Language:** The STT is currently optimized for English voice commands.
 - **Beta Server:** The Cloud VPS is a private research server. Occasional downtime for maintenance may occur.
 
