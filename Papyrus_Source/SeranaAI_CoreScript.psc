@@ -120,18 +120,20 @@ Event OnUpdate()
                     EndIf
                     
                     If (DestObj.GetBaseObject().GetFormID() == 0x0000003B)
-                        DestObj.Delete()
+                        DestObj.Disable()
+			DestObj.Delete()
                     EndIf
                     
                     gotoTimeout = -1.0 
                     SeranaDestAlias.Clear()
                     SeranaRef.EvaluatePackage()
                     
-                ElseIf (gotoTimeout > 300.0) ; 5-Minute Failsafe Timeout
+                ElseIf (gotoTimeout > 30.0) ; 5-Minute Failsafe Timeout
                     SeranaGoToState.SetValueInt(0)
                     
                     If (DestObj.GetBaseObject().GetFormID() == 0x0000003B)
-                        DestObj.Delete()
+                        DestObj.Disable()
+			DestObj.Delete()
                     EndIf
                     
                     gotoTimeout = 0.0
@@ -162,7 +164,7 @@ Event OnUpdate()
                     SeranaDestLocAlias.Clear()
                     SeranaRef.EvaluatePackage()
                     
-                ElseIf (gotoTimeout > 300.0) ; 5-Minute Failsafe Timeout
+                ElseIf (gotoTimeout > 30.0) ; 5-Minute Failsafe Timeout
                     SeranaGoToState.SetValueInt(0)
                     gotoTimeout = 0.0
                     SeranaDestLocAlias.Clear()
@@ -342,9 +344,9 @@ Event OnUpdate()
         EndIf
         wasInCombat = isInCombat
 
-        If (!isInCombat && SeranaRef.GetDistance(Game.GetPlayer()) < 1500.0)
+        If (!isInCombat && SeranaRef.GetDistance(Game.GetPlayer()) < 2000.0)
             idleTimer += PollInterval
-            If (idleTimer >= 60.0) 
+            If (idleTimer >= 1080.0) 
                 idleTimer = 0.0
                 If (signalCode == 0) 
                     signalCode = 7
