@@ -6,27 +6,28 @@ import os
 import re
 import requests
 import time
-import json  # TAMBAHAN MUTLAK: Untuk menulis file JSON ke Skyrim
+import json 
 
-# Membungkam peringatan symlink dari Hugging Face
+# Suppress Hugging Face symlink warnings
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1" 
 
 from faster_whisper import WhisperModel
 
-# ==========================================
-# KONFIGURASI PATH MUTLAK SKYRIM (ATOMIC DROP)
-# ==========================================
-SKYRIM_MOD_DIR = r"G:\Modding Apps\Mod Organizer 2 - Game Instances\TES V - Skyrim - AE\mods\Serana AI - Brain Data\SKSE\Plugins\StorageUtilData"
+# DYNAMIC SKYRIM PATH CONFIGURATION (ATOMIC DROP)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+SKYRIM_MOD_DIR = os.path.join(current_dir, "..", "SKSE", "Plugins", "StorageUtilData")
+
+if not os.path.exists(SKYRIM_MOD_DIR):
+    os.makedirs(SKYRIM_MOD_DIR)
+
 TEMP_FILE_PATH = os.path.join(SKYRIM_MOD_DIR, "TempCommand.json")
 FINAL_FILE_PATH = os.path.join(SKYRIM_MOD_DIR, "SeranaCommand.json")
 
-# ==========================================
-# 1. INISIALISASI MESIN STT
-# ==========================================
-print(" Membangunkan Telinga Serana (Loading Whisper Model)...")
+# STT ENGINE INITIALIZATION
+print(" [SYSTEM] Initializing Local STT Engine (Loading Whisper Model)...")
 model_size = "small.en" 
 model = WhisperModel(model_size, device="cpu", compute_type="int8")
-print(" Telinga Serana Siap Mendengar!")
+print(" [SYSTEM] Audio input ready. Awaiting voice command.")
 
 RATE = 16000
 CHANNELS = 1
@@ -39,16 +40,16 @@ def load_skyrim_vocabulary(filepath="vocabulary.txt"):
             content = f.read().replace('\n', ' ')
             return content
     else:
-        print(" Warning: vocabulary.txt tidak ditemukan. Menggunakan mode standar.")
+        print(" [WARNING] vocabulary.txt not found. Proceeding with standard recognition mode.")
         return ""
 
-# Load kamus sekali saja saat startup
+# Load dictionary once during startup
 SKYRIM_PROMPT = load_skyrim_vocabulary()
 
 def record_audio():
-    print(f"\n[INFO] Tahan tombol '{PTT_KEY}' untuk bicara, lepaskan untuk memproses...")
+    print(f"\n[INFO] Hold the '{PTT_KEY}' key to speak, release to process...")
     keyboard.wait(PTT_KEY)
-    print(" Mendengarkan... (Sedang Merekam)")
+    print(" [RECORDING] Listening...")
 
     audio_data = []
 
@@ -61,29 +62,29 @@ def record_audio():
         while keyboard.is_pressed(PTT_KEY):
             sd.sleep(100) 
 
-    print(" Memproses suara...")
+    print(" [PROCESSING] Transcribing audio data...")
     
     audio_np = np.concatenate(audio_data, axis=0)
     sf.write(WAVE_OUTPUT_FILENAME, audio_np, RATE)
 
 if __name__ == "__main__":
-    # Pastikan folder target Mod Organizer 2 benar-benar ada
+    # Ensure the Target Mod Organizer 2 directory actually exists
     if not os.path.exists(SKYRIM_MOD_DIR):
-        print(f"ERROR: Direktori Skyrim tidak ditemukan!\nCek path: {SKYRIM_MOD_DIR}")
+        print(f" [FATAL ERROR] Skyrim target directory not found!\n Please check the path: {SKYRIM_MOD_DIR}")
         exit()
 
     try:
         while True:
             record_audio()
 
-            # 1. MULAI STOPWATCH STT
+            # START STT PROFILING TIMER
             t_stt_start = time.time()
             
             segments, info = model.transcribe(
                 WAVE_OUTPUT_FILENAME, 
                 beam_size=1, 
                 initial_prompt=SKYRIM_PROMPT 
-                )
+            )
             
             transcription = ""
             for segment in segments:
@@ -92,21 +93,19 @@ if __name__ == "__main__":
             final_text = transcription.strip()
             final_text = re.sub(r'[^\w\s\']', '', final_text) 
             
-            # 2. HENTIKAN STOPWATCH STT
-            stt_latency = (time.time() - t_stt_start) * 1000 # Konversi ke ms
+            # STOP STT PROFILING TIMER
+            stt_latency = (time.time() - t_stt_start) * 1000
             
-            # Jika Whisper halusinasi karena mikrofon sunyi
+            # Whisper hallucination mitigation (silent microphone)
             if final_text.lower() in ["you", "thank you", ""]:
-                print(" [Peringatan]: Suara tidak terdengar. Pastikan setting Microphone Windows sudah benar.")
+                print(" [WARNING] No voice detected. Please verify Windows Microphone settings.")
             elif final_text:
                 print(f" Dragonborn: \"{final_text}\"")
                 
-                # ==========================================
-                # TAHAP 2: HTTP BRIDGE & LATENCY PROFILING
-                # ==========================================
-                print(" Mengirim ke Otak Serana (NLU) di Jakarta...")
+                # HTTP BRIDGE & LATENCY PROFILING
+                print(" [NETWORK] Transmitting string to Cloud NLU Server...")
                 
-                # 3. MULAI STOPWATCH NLU
+                # START NLU PROFILING TIMER
                 t_nlu_start = time.time() 
                 
                 try:
@@ -116,47 +115,43 @@ if __name__ == "__main__":
                         timeout=3
                     )
                     
-                    # 4. HENTIKAN STOPWATCH NLU & HITUNG TOTAL
+                    # STOP NLU PROFILING TIMER & CALCULATE TOTAL
                     nlu_latency = (time.time() - t_nlu_start) * 1000 
                     total_latency = stt_latency + nlu_latency
                     
                     if response.status_code == 200:
                         data = response.json()
-                        print(f" NLU Sukses!")
+                        print(f" [NETWORK] Cloud NLU Response: SUCCESS 200 OK")
                         
-                        # CETAK LAPORAN PROFILING LENGKAP
-                        print("-" * 30)
-                        print(f"Breakdown Waktu:")
-                        print(f"   - Waktu STT (Whisper) : {stt_latency:.2f} ms")
-                        print(f"   - Waktu NLU (API)     : {nlu_latency:.2f} ms")
-                        print(f" TOTAL TRUE LATENCY    : {total_latency:.2f} ms")
-                        print("-" * 30)
+                        # PRINT COMPLETE PROFILING REPORT
+                        print("-" * 40)
+                        print(f" Latency Profiling Breakdown:")
+                        print(f"   - Edge STT Time (Whisper) : {stt_latency:.2f} ms")
+                        print(f"   - Cloud NLU Time (API)    : {nlu_latency:.2f} ms")
+                        print(f"   TOTAL ROUND-TRIP LATENCY  : {total_latency:.2f} ms")
+                        print("-" * 40)
                         
-                        # ==========================================
-                        # TAHAP 3: ATOMIC FILE DROP (THE FINAL BRIDGE)
-                        # ==========================================
+                        # ATOMIC FILE DROP (THE FINAL BRIDGE)
                         try:
-                            # Tulis ke file sementara (mencegah Papyrus membaca file setengah matang)
                             with open(TEMP_FILE_PATH, "w", encoding="utf-8") as f:
                                 json.dump(data, f, indent=4)
                             
-                            # Tindih file asli secara instan (Atomic Swap)
                             os.replace(TEMP_FILE_PATH, FINAL_FILE_PATH)
-                            print(f"Payload NLU berhasil ditembakkan ke Skyrim!")
-                            print(f"Target: SeranaCommand.json")
+                            print(f" [FILE SYSTEM] NLU Payload successfully injected into Skyrim VFS!")
+                            print(f" Target: SeranaCommand.json")
                         except Exception as e:
-                            print(f"GAGAL menulis ke folder Skyrim: {e}")
+                            print(f" [FATAL ERROR] Failed to write to Skyrim directory: {e}")
 
                     else:
-                        print(f" NLU Gagal (Status {response.status_code}): {response.text}")
+                        print(f" [NETWORK ERROR] NLU Failed (Status {response.status_code}): {response.text}")
                 except Exception as e:
-                    print(f" GAGAL menyambung ke server NLU Cloud: {e}")
-                    print(" Pastikan Container Docker di DomaiNesia sedang menyala!")
+                    print(f" [NETWORK ERROR] Failed to connect to Cloud NLU Server: {e}")
+                    print(" Please ensure the VPS Docker Container is currently active.")
                 
-                print("=" * 50)
+                print("=" * 60)
             
             if os.path.exists(WAVE_OUTPUT_FILENAME):
                 os.remove(WAVE_OUTPUT_FILENAME)
 
     except KeyboardInterrupt:
-        print("\n Mematikan Telinga Serana...")
+        print("\n [SYSTEM] Shutting down Local STT Engine...")
