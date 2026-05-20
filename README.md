@@ -57,8 +57,10 @@ Running a multi-task NLP inference pipeline (Intent + Entity + Sentiment simulta
 **Quick Summary:**
 
 1. Install this mod via **Mod Organizer 2** (Requires SKSE & PapyrusUtil SE).
-2. Install **Python 3.10+** on your PC.
-3. Open the `Voice_Client` folder, launch `cmd`, and run: `python -m pip install -r requirements.txt`
+2. Install **Python 3.10+** on your PC (Make sure to check "Add Python to PATH" during installation).
+3. Open the `Voice_Client` folder, launch `cmd`, and run these two commands in order:
+   `python -m pip install --upgrade pip`
+   `python -m pip install -r requirements.txt`
 4. Run `stt_client.py` and keep the terminal open in the background.
 5. Launch Skyrim, hold **'X'** to speak, and enjoy!
 
